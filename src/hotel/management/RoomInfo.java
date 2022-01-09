@@ -2,6 +2,7 @@ package hotel.management;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -42,21 +43,31 @@ public class RoomInfo extends JFrame{
     private void setupFrame() {
         setContentPane(mainPanel);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setMinimumSize(new Dimension(600, 500));
+        setMinimumSize(new Dimension(700, 600));
 
-
+        String header[] = {"Room No.", "Availability", "Room Type", "Price"};
         model.setColumnCount(4);
         roomsTable.setModel(model);
+        for(int i=0;i<roomsTable.getColumnCount();i++)
+        {
+            TableColumn column = roomsTable.getTableHeader().getColumnModel().getColumn(i);
+
+            column.setHeaderValue(header[i]);
+        }
+        Font font = new Font("sanserif", Font.PLAIN, 15);
+        roomsTable.getTableHeader().setFont(font);
+        try {
+            showRecords();
+        } catch (FileNotFoundException e) {
+            System.out.println("Error when opening file.");
+        }
+
+
         backToMenuButton.setIcon(new ImageIcon("menu.png"));
         setVisible(true);
     }
 
-    private void showRooms(){
-        String roomType = Objects.requireNonNull(roomTypeComboBox.getSelectedItem()).toString();
 
-
-
-    }
 
 
     private void addRowToTable() throws FileNotFoundException {
@@ -88,4 +99,23 @@ public class RoomInfo extends JFrame{
         }
 
     }
+
+    private void showRecords() throws FileNotFoundException {
+
+        File myObj = new File("rooms.txt");
+        Scanner myReader = new Scanner(myObj);
+
+        while (myReader.hasNextLine()) {
+            String roomsInfo = myReader.nextLine();
+            String[] roomsInfoS = roomsInfo.split(",");
+
+            model.addRow(roomsInfoS);
+
+
+
+        }
+    }
+
+
+
 }

@@ -5,6 +5,7 @@ import com.toedter.calendar.JDateChooser;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 import java.awt.*;
@@ -41,9 +42,7 @@ public class ShowBookings extends JFrame{
         showButton.addActionListener(e-> {
             try {
                 addRowToTable();
-            } catch (FileNotFoundException ex) {
-                ex.printStackTrace();
-            } catch (ParseException ex) {
+            } catch (FileNotFoundException | ParseException ex) {
                 ex.printStackTrace();
             }
         });
@@ -59,7 +58,7 @@ public class ShowBookings extends JFrame{
     private void setupFrame(){
         setContentPane(mainPanel);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setMinimumSize(new Dimension(900, 600));
+        setMinimumSize(new Dimension(1000, 600));
         setResizable(false);
 
 
@@ -74,17 +73,28 @@ public class ShowBookings extends JFrame{
         model.setColumnCount(8);
         bookingsTable.setModel(model);
 
-        bookingsTable.getColumnModel().getColumn(0).setMaxWidth(70);
-        bookingsTable.getColumnModel().getColumn(1).setPreferredWidth(80);
+        bookingsTable.getColumnModel().getColumn(0).setPreferredWidth(70);
+        bookingsTable.getColumnModel().getColumn(1).setPreferredWidth(75);
         bookingsTable.getColumnModel().getColumn(2).setPreferredWidth(110);
         bookingsTable.getColumnModel().getColumn(3).setPreferredWidth(80);
-        bookingsTable.getColumnModel().getColumn(4).setPreferredWidth(80);
-        bookingsTable.getColumnModel().getColumn(5).setPreferredWidth(120);
+        bookingsTable.getColumnModel().getColumn(4).setPreferredWidth(100);
+        bookingsTable.getColumnModel().getColumn(5).setPreferredWidth(90);
         bookingsTable.getColumnModel().getColumn(6).setPreferredWidth(100);
         bookingsTable.getColumnModel().getColumn(7).setPreferredWidth(100);
 
+        String header[] = {"ROOM NO.", "STATUS", "CUSTOMER NAME", "IC / PASSPORT", "PHONE NUMBER", "EMAIL", "CHECK IN DATE", "CHECK OUT DATE"};
+
+        for(int i=0;i<bookingsTable.getColumnCount();i++)
+        {
+            TableColumn column = bookingsTable.getTableHeader().getColumnModel().getColumn(i);
+
+            column.setHeaderValue(header[i]);
+        }
+        Font font = new Font("sanserif", Font.PLAIN, 13);
+        bookingsTable.getTableHeader().setFont(font);
 
         backToMenuButton.setIcon(new ImageIcon("menu.png"));
+        showButton.setIcon(new ImageIcon("search.png"));
 
 
 

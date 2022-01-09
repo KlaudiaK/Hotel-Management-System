@@ -53,15 +53,15 @@ public class Customer extends JFrame {
 
    // private static final DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
     private JDateChooser dateChooser;
-    private JTextArea currentDateTextArea;
+    //private JTextArea currentDateTextArea;
 
     private JButton saveButton;
-    private JButton button2;
-    private JButton selectButton;
+    private JButton cancelButton;
     private JPanel calendarPanel;
     private JLabel priceLabel;
     private JTextField priceTextField;
     private JButton backToMenuButton;
+    private JTextField currentDateTextField;
 
     public Customer(){
         setupFrame();
@@ -81,28 +81,29 @@ public class Customer extends JFrame {
             setVisible(false);
             dispose();
         });
+        cancelButton.addActionListener(e->clear());
 
     }
 
     private void setupFrame(){
         setContentPane(mainPanel);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setMinimumSize(new Dimension(500, 600));
+        setMinimumSize(new Dimension(600, 800));
 
 
-
-        currentDateTextArea.setText("Date\n" + (LocalDate.now()).toString());
-        //mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.));
+        currentDateTextField.setText("Date\n" + (LocalDate.now()).toString());
 
         dateChooser = new JDateChooser();
         dateChooser.setDateFormatString("dd-MM-yyyy");
-        //dateChooser.setBounds(71, 43, 259, 20);
         calendarPanel.setSize(new Dimension(300, 50));
 
         calendarPanel.add(dateChooser);
 
 
         backToMenuButton.setIcon(new ImageIcon("menu.png"));
+
+        saveButton.setIcon(new ImageIcon("save.png"));
+        cancelButton.setIcon(new ImageIcon("cancel.png"));
         setVisible(true);
 
     }
@@ -127,6 +128,36 @@ public class Customer extends JFrame {
     }
 
     private void writeToFile() throws ParseException {
+        String name = null;
+        String sex = null;
+        String IC = null;
+        String address = null;
+        String phoneNumber = null;
+        String email = null;
+        String guestsNo = null;
+        String roomNo = null;
+        String dateOfCheckOut = null;
+        Date dateOfCheckIn = null;
+        try {
+            name = Validators.getName(nameTextField.getText());
+            try {
+                sex = sexG.getSelection().getActionCommand();
+            } catch (NullPointerException e) {
+                throw new InvalidSexException();
+            }
+            IC = Validators.getIC(ICTextField.getText());
+            address = addressTextArea.getText();
+            phoneNumber = Validators.getPhoneNumber(phoneNumberTextField.getText());
+            email = Validators.getEmail(emailTextField.getText());
+            dateOfCheckIn = dateChooser.getDate();
+
+            dateOfCheckOut = dateOfCheckOutTextField.getText();
+            guestsNo = String.valueOf(Validators.getGuestsNo(guestsNoTextField.getText()));
+            roomNo = String.valueOf(Validators.getDaysOfStay(roomNoTextField.getText()));
+        } catch (AppExceptions e) {
+            System.out.println(e.toString());
+        }
+/*
         String name = nameTextField.getText();
         String sex = sexG.getSelection().getActionCommand();
         String IC = ICTextField.getText();
@@ -139,38 +170,37 @@ public class Customer extends JFrame {
         String guestsNo = guestsNoTextField.getText();
         String roomNo = roomNoTextField.getText();
 
+ */
+
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         String dateOfCheckInStr = sdf.format(dateOfCheckIn);
-       // String strDate = DateFormat.getDateInstance().format(dateOfCheckIn);
+        // String strDate = DateFormat.getDateInstance().format(dateOfCheckIn);
 /*
         System.out.println("Date: "+ strDate);
         int daysOfStay = Integer.parseInt(daysOfStayTextField.getText());
 
-
-
         Calendar c = Calendar.getInstance();
         c.setTime(dateOfCheckIn);
-
-
         c.add(Calendar.DAY_OF_MONTH, daysOfStay);
         //String dateOfCheckOut = sdf.format(c.getTime());
         System.out.println(sdf.format(c.getTime()));
 
-
  */
 
-
-        address = address.replaceAll("\n", " ");
-        String customerInfo = name+","+ sex+","+ IC+ "," + address+ "," + phoneNumber+ "," + email +  ","+ dateOfCheckInStr + "," + dateOfCheckOut + "," + guestsNo +","+roomNo+ "\n";
-        try {
-            FileWriter myWriter = new FileWriter("booking.txt", true);
-            myWriter.write(customerInfo +  "\n");
-            myWriter.close();
-            System.out.println("Successfully wrote to the file.");
-        } catch (IOException e) {
-            System.out.println("An error occurred.");
-            e.printStackTrace();
+        if (name != null && sex != null && IC != null && address != null && phoneNumber != null && email != null && guestsNo != null && roomNo != null && dateOfCheckOut != null && dateOfCheckIn != null){
+            address = address.replaceAll("\n", " ");
+            String customerInfo = name + "," + sex + "," + IC + "," + address + "," + phoneNumber + "," + email + "," + dateOfCheckInStr + "," + dateOfCheckOut + "," + guestsNo + "," + roomNo + "\n";
+            try {
+                FileWriter myWriter = new FileWriter("booking.txt", true);
+                myWriter.write(customerInfo + "\n");
+                myWriter.close();
+                System.out.println("Successfully wrote to the file.");
+            } catch (IOException e) {
+                System.out.println("An error occurred.");
+                e.printStackTrace();
+            }
         }
+
     }
 
     private void chooseRoom() {
@@ -254,6 +284,22 @@ public class Customer extends JFrame {
 
         System.out.println(sdf.format(c.getTime()));
         dateOfCheckOutTextField.setText(sdf.format(c.getTime()));
+    }
+
+    private void clear(){
+        nameTextField.setText("");
+        maleRadioButton.setSelected(false);
+        femaleRadioButton.setSelected(false);
+        ICTextField.setText("");
+        addressTextArea.setText("");
+        phoneNumberTextField.setText("");
+        emailTextField.setText("");
+        dateChooser.setCalendar(null);
+
+        dateOfCheckOutTextField.setText("");
+        guestsNoTextField.setText("");
+        roomNoTextField.setText("");
+
     }
 
 

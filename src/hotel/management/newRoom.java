@@ -52,7 +52,7 @@ public class newRoom extends JFrame {
     private void setupFrame(){
         setContentPane(mainPanel);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setMinimumSize(new Dimension(500, 600));
+        setMinimumSize(new Dimension(550, 600));
 
 
         setVisible(true);
@@ -75,25 +75,46 @@ public class newRoom extends JFrame {
     }
 
     private void writeToFile() throws ParseException {
+        Integer roomNo = null;
+        String availability = null;
+        String roomType = null;
+        Integer price = null;
 
+        try{
+            roomNo = Validators.getRoomNo(roomNoTextField.getText());
+            try{
+                availability = availableG.getSelection().getActionCommand();
+            } catch (NullPointerException e) {
+            throw new InvalidAvailabilityException();
+        }
 
+            roomType = Objects.requireNonNull(roomTypeComboBox.getSelectedItem()).toString();
+            price = Validators.getPrice(priceTextField.getText());
+        }catch (AppExceptions e){
+            System.out.println(e.toString());
+        }
 
+/*
         String roomNo = roomNoTextField.getText();
 
         String availability = availableG.getSelection().getActionCommand();
         String roomType = Objects.requireNonNull(roomTypeComboBox.getSelectedItem()).toString();
         String price = priceTextField.getText();
 
-        String customerInfo = roomNo+","+ availability+","+ roomType+ "," + price+ "\n";
-        try {
-            FileWriter myWriter = new FileWriter("rooms.txt", true);
-           // myWriter.write(customerInfo +  "\n");
-            myWriter.close();
-            System.out.println("Successfully wrote to the file.");
-        } catch (IOException e) {
-            System.out.println("An error occurred.");
-            e.printStackTrace();
+ */
+        if (roomNo != null && availability != null && roomType != null && price != null){
+            String customerInfo = roomNo+","+ availability+","+ roomType+ "," + price+ "\n";
+            try {
+                FileWriter myWriter = new FileWriter("rooms.txt", true);
+                myWriter.write(customerInfo +  "\n");
+                myWriter.close();
+                System.out.println("Successfully wrote to the file.");
+            } catch (IOException e) {
+                System.out.println("An error occurred.");
+                e.printStackTrace();
+            }
         }
+
     }
 
 

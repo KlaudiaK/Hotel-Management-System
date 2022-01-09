@@ -12,7 +12,6 @@ public class Menu extends JFrame implements ActionListener {
     private JPanel mainPanel;
     private JButton addNewRoomButton;
     private JButton showRoomInfoButton;
-    private JLabel menuLabel;
 
     public Menu(){
         setupFrame();
@@ -24,7 +23,7 @@ public class Menu extends JFrame implements ActionListener {
     private void setupFrame() {
         setContentPane(mainPanel);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setMinimumSize(new Dimension(550, 500));
+        setMinimumSize(new Dimension(600, 700));
         setVisible(true);
 
         newBookingButton.setIcon(new ImageIcon("newBooking.png"));
