@@ -22,23 +22,22 @@ public class ShowBookings extends JFrame{
     private JButton showButton;
     private JPanel mainPanel;
     private JTable bookingsTable;
-    private JLabel statusLabel;
-    private JLabel roomNoLabel;
-    private JLabel customerNameLabel;
-    private JLabel ICLabel;
-    private JLabel phoneNumberLabel;
-    private JLabel emailLabel;
-    private JLabel checkInDateLabel;
-    private JLabel checkOutDateLabel;
     private JButton backToMenuButton;
 
     private JDateChooser dateChooser;
 
+
+
     public final DefaultTableModel model = new DefaultTableModel();
 
+    private final CustomerRepository repository;
 
-    public ShowBookings(){
+
+    public ShowBookings(CustomerRepository repository){
+        this.repository = repository;
         setupFrame();
+        readData();
+
         showButton.addActionListener(e-> {
             try {
                 addRowToTable();
@@ -46,6 +45,7 @@ public class ShowBookings extends JFrame{
                 ex.printStackTrace();
             }
         });
+
 
         backToMenuButton.addActionListener(e->{
             new Menu();
@@ -96,10 +96,6 @@ public class ShowBookings extends JFrame{
         backToMenuButton.setIcon(new ImageIcon("menu.png"));
         showButton.setIcon(new ImageIcon("search.png"));
 
-
-
-
-
         setVisible(true);
 
     }
@@ -108,45 +104,33 @@ public class ShowBookings extends JFrame{
         model.setRowCount(0);
 
         Date date =  dateChooser.getDate();
-       // Set<Integer> roomSet = new HashSet<Integer> ();
- /*
-        String strDate = DateFormat.getDateInstance().format(dateOfCheckIn);
 
-       // System.out.println("Date: "+ strDate);
-        System.out.println(sdf.format(dateOfCheckIn));
-
-         */
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-        File bookingFile = new File("booking.txt");
-        Scanner myReader = new Scanner(bookingFile);
 
+        ArrayList<CustomerEntity> entities = repository.readFromFile();
+        System.out.println("HELLO\n");
+        for (CustomerEntity e : entities) {
+            System.out.println("HELLO\n");
+            String dateOfCheckIn = e.getDateOfCheckIn();
+            Date dateIn = sdf.parse(dateOfCheckIn);
+            String dateOfCheckOut = e.getDateOfCheckOut();
+            Date dateOut = sdf.parse(dateOfCheckOut);
 
-        while (myReader.hasNextLine()) {
-            String bookingInfo = myReader.nextLine();
-            Object[] bookingInfoS = bookingInfo.split(",");
-            for(Object s: bookingInfoS){
-                System.out.println(s.toString());
-            }
-
-            Object[] finalInfo = {bookingInfoS[9], "not available",bookingInfoS[0], bookingInfoS[2], bookingInfoS[4], bookingInfoS[5],bookingInfoS[6], bookingInfoS[7]};
-            String dateOfCheckIn = (String) bookingInfoS[6];
-            Date dateIn=sdf.parse(dateOfCheckIn);
-            String dateOfCheckOut = (String) bookingInfoS[7];
-            Date dateOut=sdf.parse(dateOfCheckOut);
-            if (date.after(dateIn)){
-                System.out.println("Tak");
-            }
-            if ((date.after(dateIn) || date.equals(dateIn)) &&(date.equals(dateOut)|| date.before(dateOut)) ){
-                model.addRow(finalInfo);
+            if ((date.after(dateIn) || date.equals(dateIn)) && (date.equals(dateOut) || date.before(dateOut))) {
+                model.addRow(e.getAsRow());
 
             }
-
-
-
-
 
         }
+
+
+
     }
+
+
+
+
+
     private void sortTable(){
         TableRowSorter<TableModel> sorter = new TableRowSorter<>(model);
         bookingsTable.setRowSorter(sorter);
@@ -157,10 +141,33 @@ public class ShowBookings extends JFrame{
 
     }
 
+    private void showRecords() throws FileNotFoundException {
+        File bookingFile = new File("booking.txt");
+        Scanner myReader = new Scanner(bookingFile);
+        while (myReader.hasNextLine()) {
+            String bookingInfo = myReader.nextLine();
+            System.out.println(bookingInfo);
+            Object[] bookingInfoS =  bookingInfo.split(",");
+            Object[] finalInfo = {bookingInfoS[9], "not available",bookingInfoS[0], bookingInfoS[2], bookingInfoS[4], bookingInfoS[5],bookingInfoS[6], bookingInfoS[7]};
+            model.addRow(finalInfo);
+        }
+    }
+
+    private void readData(){
+        List<CustomerEntity> entities = repository.readFromFile();
+        entities.forEach(e->model.addRow(e.getAsRow()));
+        /*
+        System.out.println(entities.size());
+        entities.forEach(e->{
+            System.out.println(Arrays.toString(e.getAsRow()));
+            model.addRow(e.getAsRow());
+            e.print();
+        });
+
+         */
 
 
-
-
+    }
 
 
 

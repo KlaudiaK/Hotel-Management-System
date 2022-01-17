@@ -1,4 +1,0 @@
-Klaudia Kowalksa,male,123456789,Ptusza 23A Tranowka 77-416,431414142,klaudia@gmail.com,01/01/2022,06/01/2022,3,12
-Klaudia Kowalksa,male,123456789,Ptusza 23A Tranowka 77-416,431414142,klaudia@gmail.com,08/01/2022,12/01/2022,4,15
-Anna Kowalska,female,FCB946713,Ul.Fiolkowa 3 Poznan 66-497,628916257,ak456@gmail.com,10/01/2022,13/01/2022,2,8
-

@@ -51,9 +51,8 @@ public class Customer extends JFrame {
     private JTextField roomNoTextField;
     private JButton chooseRoomButton;
 
-   // private static final DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
     private JDateChooser dateChooser;
-    //private JTextArea currentDateTextArea;
+
 
     private JButton saveButton;
     private JButton cancelButton;
@@ -63,7 +62,10 @@ public class Customer extends JFrame {
     private JButton backToMenuButton;
     private JTextField currentDateTextField;
 
-    public Customer(){
+    private final CustomerRepository repository;
+
+    public Customer(CustomerRepository repository){
+        this.repository = repository;
         setupFrame();
         textFields();
         saveButton.addActionListener(e -> {
@@ -157,38 +159,16 @@ public class Customer extends JFrame {
         } catch (AppExceptions e) {
             System.out.println(e.toString());
         }
-/*
-        String name = nameTextField.getText();
-        String sex = sexG.getSelection().getActionCommand();
-        String IC = ICTextField.getText();
-        String address = addressTextArea.getText();
-        String phoneNumber = phoneNumberTextField.getText();
-        String email = emailTextField.getText();
-        Date dateOfCheckIn =  dateChooser.getDate();
 
-        String dateOfCheckOut = dateOfCheckOutTextField.getText();
-        String guestsNo = guestsNoTextField.getText();
-        String roomNo = roomNoTextField.getText();
-
- */
 
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         String dateOfCheckInStr = sdf.format(dateOfCheckIn);
-        // String strDate = DateFormat.getDateInstance().format(dateOfCheckIn);
+
+
+        if (name != null && sex != null && IC != null && address != null && phoneNumber != null && email != null && guestsNo != null && roomNo != null && dateOfCheckOut != null && dateOfCheckInStr != null){
+
+            saveData();
 /*
-        System.out.println("Date: "+ strDate);
-        int daysOfStay = Integer.parseInt(daysOfStayTextField.getText());
-
-        Calendar c = Calendar.getInstance();
-        c.setTime(dateOfCheckIn);
-        c.add(Calendar.DAY_OF_MONTH, daysOfStay);
-        //String dateOfCheckOut = sdf.format(c.getTime());
-        System.out.println(sdf.format(c.getTime()));
-
- */
-
-        if (name != null && sex != null && IC != null && address != null && phoneNumber != null && email != null && guestsNo != null && roomNo != null && dateOfCheckOut != null && dateOfCheckIn != null){
-            address = address.replaceAll("\n", " ");
             String customerInfo = name + "," + sex + "," + IC + "," + address + "," + phoneNumber + "," + email + "," + dateOfCheckInStr + "," + dateOfCheckOut + "," + guestsNo + "," + roomNo + "\n";
             try {
                 FileWriter myWriter = new FileWriter("booking.txt", true);
@@ -199,30 +179,33 @@ public class Customer extends JFrame {
                 System.out.println("An error occurred.");
                 e.printStackTrace();
             }
+
+ */
+
+
         }
 
     }
 
     private void chooseRoom() {
         RoomInfo roomInfo = new RoomInfo();
-
+        //TODO check availability of room
         roomInfo.SelectButton.addActionListener(e-> {
 
             String roomNo = null;
 
             if (roomInfo.roomsTable.getSelectedRow() != -1) {
-                System.out.println("1");
+
                 roomNo = roomInfo.model.getValueAt(roomInfo.roomsTable.getSelectedRow(), 0).toString();
                 String price = roomInfo.model.getValueAt(roomInfo.roomsTable.getSelectedRow(), 3).toString();
 
-                System.out.println("Price: " +price);
                 int priceInt = Integer.parseInt(price);
-                System.out.println("Days: " +daysOfStayTextField.getText());
                 priceInt *= Integer.parseInt(daysOfStayTextField.getText());
                 priceTextField.setText(String.valueOf(priceInt));
             }
             String finalRoomNo = roomNo;
             roomNoTextField.setText(finalRoomNo);
+            //TODO change availability of room
             try {
                 changeAvailability(finalRoomNo);
             } catch (IOException ex) {
@@ -263,8 +246,6 @@ public class Customer extends JFrame {
         }
 
         writer.close();
-
-
     }
 
     private void getDateOfCheckOut(){
@@ -282,7 +263,6 @@ public class Customer extends JFrame {
 
         c.add(Calendar.DAY_OF_MONTH, daysOfStay);
 
-        System.out.println(sdf.format(c.getTime()));
         dateOfCheckOutTextField.setText(sdf.format(c.getTime()));
     }
 
@@ -295,14 +275,41 @@ public class Customer extends JFrame {
         phoneNumberTextField.setText("");
         emailTextField.setText("");
         dateChooser.setCalendar(null);
-
+        daysOfStayTextField.setText("");
         dateOfCheckOutTextField.setText("");
         guestsNoTextField.setText("");
         roomNoTextField.setText("");
+        priceTextField.setText("");
 
     }
 
+    private void saveData(){
+
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        String dateOfCheckInStr = sdf.format(dateChooser.getDate());
+        ArrayList<CustomerEntity> entities = new ArrayList<CustomerEntity>();
+
+        CustomerEntity newCustomer = new CustomerEntity.Builder()
+                .name(nameTextField.getText())
+                .sex(sexG.getSelection().getActionCommand())
+                .IC(ICTextField.getText())
+                .address(addressTextArea.getText().replaceAll("\n", " "))
+                .phoneNumber(phoneNumberTextField.getText())
+                .email(emailTextField.getText())
+                .guestsNo(guestsNoTextField.getText())
+                .roomNo(roomNoTextField.getText())
+                .dateOfCheckIn(dateOfCheckInStr)
+                .dateOfCheckOut(dateOfCheckOutTextField.getText())
+                .build();
+
+        entities.add(newCustomer);
+        try {
+            repository.saveToFile(entities);
+        } catch (CannotSaveToFileException e) {
+            JOptionPane.showMessageDialog(this, e.toString());
+        }
 
 
+    }
 
 }

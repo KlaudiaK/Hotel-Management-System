@@ -12,6 +12,11 @@ public class Menu extends JFrame implements ActionListener {
     private JPanel mainPanel;
     private JButton addNewRoomButton;
     private JButton showRoomInfoButton;
+    FileDataSource dataSource = new FileDataSource("booking.ser");
+    CustomerRepository repository = new CustomerRepository(dataSource);
+
+
+
 
     public Menu(){
         setupFrame();
@@ -49,14 +54,17 @@ public class Menu extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
 
+
         if (e.getSource() == newBookingButton) {
-            new Customer();
+
+            new Customer(repository);
             setVisible(false);
             dispose();
 
         }
         else if (e.getSource() == showAllBookingsButton) {
-            new ShowBookings();
+
+            new ShowBookings(repository);
             setVisible(false);
             dispose();
         }
@@ -73,7 +81,7 @@ public class Menu extends JFrame implements ActionListener {
         }
 
     }
-
+/*
 
     public void addMenu(){
 
@@ -95,4 +103,6 @@ public class Menu extends JFrame implements ActionListener {
         setJMenuBar(menuBar);
 
     }
+
+ */
 }

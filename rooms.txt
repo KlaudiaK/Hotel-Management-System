@@ -1,7 +1,7 @@
-1,available,Single Room,120
+1,not available,Single Room,120
 12,not available,Single Room,150
 14,not available,Single Room,140
 8,not available,Triple Room,260
 16,not available,Studio Room,300
-15,available,Double Room,230
+15,not available,Double Room,230
 
