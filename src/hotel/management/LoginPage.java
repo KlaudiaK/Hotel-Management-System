@@ -47,7 +47,7 @@ public class LoginPage extends JFrame implements ActionListener {
             }
         });
 
-        getContentPane().setBackground(new Color(98,163,152));
+        getContentPane().setBackground(new Color(169,157,170));
 
         mainPanel.setOpaque(false);
         add(mainPanel);
@@ -90,7 +90,6 @@ public class LoginPage extends JFrame implements ActionListener {
                     if (userText.equals(checkData[0]) && pwdText.equals(checkData[1])) {
                         JOptionPane.showMessageDialog(this, "Login Successful");
                         check = true;
-                        System.out.println(data);
                     }
 
                 }
@@ -108,7 +107,6 @@ public class LoginPage extends JFrame implements ActionListener {
             } catch (FileNotFoundException ex) {
                 JOptionPane.showMessageDialog(this,"File wasn't found.");
             }
-
 
 
         }

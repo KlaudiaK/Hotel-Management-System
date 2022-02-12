@@ -1,6 +1,5 @@
 package hotel.management;
 
-import javax.swing.*;
 import java.io.IOException;
 import java.util.ArrayList;
 

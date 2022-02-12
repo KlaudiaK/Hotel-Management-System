@@ -1,1 +1,1 @@
-Klaudia Kowalska,klaudia123
+user,password
