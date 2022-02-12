@@ -8,8 +8,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
-public class LoginPage extends JFrame implements ActionListener {
 
+public class LoginPage extends JFrame implements ActionListener {
 
     private JTextField userTextField;
     private JPasswordField passwordField;
@@ -19,6 +19,7 @@ public class LoginPage extends JFrame implements ActionListener {
     private JLabel loginLabel;
     private JLabel passwordLabel;
     private JPanel mainPanel;
+    Image img = Toolkit.getDefaultToolkit().getImage("hotel.png");
 
 
     public LoginPage(){
@@ -28,14 +29,40 @@ public class LoginPage extends JFrame implements ActionListener {
 
 
     private void setupFrame() {
-        setContentPane(mainPanel);
+
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setMinimumSize(new Dimension(550, 500));
+        setMinimumSize(new Dimension(500, 500));
 
+        this.setContentPane(new JPanel() {
+            @Override
+            public void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                g.drawImage(img, 30, 0, null);
+            }
 
+            @Override
+            public void setBackground(Color bg) {
+                super.setBackground(bg);
+
+            }
+        });
+
+        getContentPane().setBackground(new Color(98,163,152));
+
+        mainPanel.setOpaque(false);
+        add(mainPanel);
+        pack();
+
+        userTextField.setBorder(javax.swing.BorderFactory.createEmptyBorder());
+        passwordField.setBorder(javax.swing.BorderFactory.createEmptyBorder());
+
+        loginLabel.setIcon(new ImageIcon("user.png"));
+        passwordLabel.setIcon(new ImageIcon("password.png"));
 
         setVisible(true);
     }
+
+
     public void addActionEvent() {
         loginButton.addActionListener(this);
         resetButton.addActionListener(this);
@@ -79,8 +106,7 @@ public class LoginPage extends JFrame implements ActionListener {
 
                 myReader.close();
             } catch (FileNotFoundException ex) {
-                System.out.println("An error occurred.");
-                ex.printStackTrace();
+                JOptionPane.showMessageDialog(this,"File wasn't found.");
             }
 
 

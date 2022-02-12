@@ -3,17 +3,20 @@ package hotel.management;
 import java.io.*;
 import java.util.ArrayList;
 
-public class FileDataSource {
+public class CustomerFileDataSource {
     final String path;
 
-    public FileDataSource(String path) {
+
+    public CustomerFileDataSource(String path) {
         this.path = path;
     }
 
-    void saveToFile(ArrayList<CustomerEntity> entities) throws IOException{
+    void saveCustomerToFile(ArrayList<CustomerEntity> entities) throws IOException, ClassNotFoundException{
+
         ObjectOutputStream writer = null;
         try {
-            writer = new ObjectOutputStream(new FileOutputStream(path, true));
+
+            writer = new ObjectOutputStream(new FileOutputStream(path));
             writer.flush();
             writer.writeObject(entities);
         } finally {
@@ -23,19 +26,16 @@ public class FileDataSource {
 
         }
 
-
     }
 
 
 
-    ArrayList<CustomerEntity> readFromFile() throws IOException, ClassNotFoundException {
+    ArrayList<CustomerEntity> readCustomersFromFile() throws IOException, ClassNotFoundException {
         ObjectInputStream reader = null;
         try{
             reader = new ObjectInputStream(new FileInputStream(path));
             ArrayList<CustomerEntity> entities = (ArrayList<CustomerEntity>) reader.readObject();
-            for (CustomerEntity c: entities){
-                c.print();
-            }
+
             return entities;
         } finally {
             if(reader != null){
@@ -45,4 +45,6 @@ public class FileDataSource {
         }
 
     }
+
+
 }

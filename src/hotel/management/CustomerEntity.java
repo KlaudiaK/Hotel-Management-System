@@ -1,9 +1,7 @@
 package hotel.management;
 
-import javax.swing.plaf.IconUIResource;
-import javax.swing.plaf.synth.SynthRadioButtonMenuItemUI;
+
 import java.io.Serializable;
-import java.util.Date;
 
 
 public class CustomerEntity implements Serializable {
@@ -19,28 +17,18 @@ public class CustomerEntity implements Serializable {
     private String roomNo;
     private String dateOfCheckOut;
     private String dateOfCheckIn;
-    public CustomerEntity(String name, String sex, String IC, String address, String phoneNumber, String email, String guestsNo, String roomNo, String dateOfCheckIn, String dateOfCheckOut){
-        this.name = name;
-        this.sex = sex;
-        this.IC = IC;
-        this.address = address;
-        this.phoneNumber = phoneNumber;
-        this.email = email;
-        this.guestsNo = guestsNo;
-        this.roomNo = roomNo; 
 
-        this.dateOfCheckIn = dateOfCheckIn;
-        this.dateOfCheckOut = dateOfCheckOut;
-    }
 
-    public CustomerEntity() {
-
-    }
+    public CustomerEntity() {}
 
 
     Object[] getAsRow(){
 
         return new Object[] {roomNo, "not available", name,IC, phoneNumber, email, dateOfCheckIn,dateOfCheckOut};
+    }
+
+    Object[] getCustomerAsRow(){
+        return new Object[]{name, sex, IC, address, phoneNumber, email};
     }
 
     String getDateOfCheckIn(){
@@ -49,11 +37,13 @@ public class CustomerEntity implements Serializable {
     String getDateOfCheckOut(){
         return dateOfCheckOut;
     }
+    String getIC(){return IC;}
 
-    public void print(){
-        System.out.println(name+ " " + sex);
+
+
+    public  String getRoomNo(){
+        return roomNo;
     }
-
     public static final class Builder{
         private String name;
         private String sex;

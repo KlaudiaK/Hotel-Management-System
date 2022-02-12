@@ -84,17 +84,4 @@ public class Validators {
 
     }
 
-    static Integer getRoomNo(String roomNo) throws InvalidRoomNoFormatException {
-        try{
-            Integer roomNoInt = Integer.parseInt(roomNo);
-
-            return roomNoInt;
-        } catch (NumberFormatException exception){
-            throw new InvalidRoomNoFormatException();
-        }
-
-    }
-
-
-
 }

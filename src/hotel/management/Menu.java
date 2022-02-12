@@ -4,7 +4,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
 
 public class Menu extends JFrame implements ActionListener {
     private JButton newBookingButton;
@@ -12,35 +11,33 @@ public class Menu extends JFrame implements ActionListener {
     private JPanel mainPanel;
     private JButton addNewRoomButton;
     private JButton showRoomInfoButton;
-    FileDataSource dataSource = new FileDataSource("booking.ser");
-    CustomerRepository repository = new CustomerRepository(dataSource);
+    private JButton showCustomersInfoButton;
+    CustomerFileDataSource customerDataSource = new CustomerFileDataSource("booking.ser");
+    RoomFileDataSource roomDataSource = new RoomFileDataSource("rooms.ser");
 
+    CustomerRepository customerRepository = new CustomerRepository(customerDataSource);
 
+    RoomRepository roomRepository = new RoomRepository(roomDataSource);
 
 
     public Menu(){
         setupFrame();
         addActionEvent();
-       // buttonDesign();
-
 
     }
     private void setupFrame() {
         setContentPane(mainPanel);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setMinimumSize(new Dimension(600, 700));
+        setResizable(false);
         setVisible(true);
-
         newBookingButton.setIcon(new ImageIcon("newBooking.png"));
         showAllBookingsButton.setIcon(new ImageIcon("showBookings.png"));
         showRoomInfoButton.setIcon(new ImageIcon("room.png"));
-        addNewRoomButton.setIcon(new ImageIcon("addRoom.jpg"));
+        addNewRoomButton.setIcon(new ImageIcon("addRoom.png"));
+        showCustomersInfoButton.setIcon(new ImageIcon("customer.png"));
 
     }
-    private void buttonDesign(){
-        newBookingButton.setBorder(javax.swing.BorderFactory.createEmptyBorder());
-    }
-
 
 
     public void addActionEvent() {
@@ -48,6 +45,7 @@ public class Menu extends JFrame implements ActionListener {
         showAllBookingsButton.addActionListener(this);
         addNewRoomButton.addActionListener(this);
         showRoomInfoButton.addActionListener(this);
+        showCustomersInfoButton.addActionListener(this);
     }
 
 
@@ -57,52 +55,37 @@ public class Menu extends JFrame implements ActionListener {
 
         if (e.getSource() == newBookingButton) {
 
-            new Customer(repository);
+            new Customer(customerRepository, roomRepository);
             setVisible(false);
             dispose();
 
         }
         else if (e.getSource() == showAllBookingsButton) {
 
-            new ShowBookings(repository);
+            new ShowBookings(customerRepository);
             setVisible(false);
             dispose();
         }
         else if (e.getSource() == addNewRoomButton) {
-            new newRoom();
+            new newRoom(roomRepository);
             setVisible(false);
             dispose();
         }
         else if (e.getSource() == showRoomInfoButton) {
-            new RoomInfo();
+            new RoomInfo(roomRepository, customerRepository);
+            setVisible(false);
+            dispose();
+
+        }
+
+        else if (e.getSource() == showCustomersInfoButton) {
+            new CustomerInfo( customerRepository);
             setVisible(false);
             dispose();
 
         }
 
     }
-/*
 
-    public void addMenu(){
 
-        JMenuBar menuBar = new JMenuBar();
-
-        // File Menu, F - Mnemonic
-        JMenu goToMenu = new JMenu("Go To");
-        goToMenu.setMnemonic(KeyEvent.VK_F);
-
-        menuBar.add(goToMenu);
-        // File->New, N - Mnemonic
-        JMenuItem customerMenuItem = new JMenuItem("New Customer");
-        customerMenuItem.addActionListener(e->new Customer());
-        JMenuItem showBookingMenuItem = new JMenuItem("Show Bookings");
-        showBookingMenuItem.addActionListener(e->new ShowBookings());
-        goToMenu.add(customerMenuItem);
-        goToMenu.add(showBookingMenuItem);
-
-        setJMenuBar(menuBar);
-
-    }
-
- */
 }

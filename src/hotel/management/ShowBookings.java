@@ -9,7 +9,6 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 import java.awt.*;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -23,13 +22,9 @@ public class ShowBookings extends JFrame{
     private JPanel mainPanel;
     private JTable bookingsTable;
     private JButton backToMenuButton;
-
+    private JButton showAllButton;
     private JDateChooser dateChooser;
-
-
-
     public final DefaultTableModel model = new DefaultTableModel();
-
     private final CustomerRepository repository;
 
 
@@ -41,11 +36,18 @@ public class ShowBookings extends JFrame{
         showButton.addActionListener(e-> {
             try {
                 addRowToTable();
-            } catch (FileNotFoundException | ParseException ex) {
-                ex.printStackTrace();
+            } catch (FileNotFoundException ex) {
+                JOptionPane.showMessageDialog(this, "File wasn't found.");
+            }
+            catch (ParseException ex){
+                JOptionPane.showMessageDialog(this, "Error when parsing date.");
             }
         });
 
+        showAllButton.addActionListener(e->{
+            model.setRowCount(0);
+            readData();
+        });
 
         backToMenuButton.addActionListener(e->{
             new Menu();
@@ -61,14 +63,11 @@ public class ShowBookings extends JFrame{
         setMinimumSize(new Dimension(1000, 600));
         setResizable(false);
 
-
         dateChooser = new JDateChooser();
         dateChooser.setDateFormatString("dd/MM/yyyy");
 
         calendarPanel.setSize(new Dimension(300, 50));
-
         calendarPanel.add(dateChooser);
-
 
         model.setColumnCount(8);
         bookingsTable.setModel(model);
@@ -108,9 +107,9 @@ public class ShowBookings extends JFrame{
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
         ArrayList<CustomerEntity> entities = repository.readFromFile();
-        System.out.println("HELLO\n");
+
         for (CustomerEntity e : entities) {
-            System.out.println("HELLO\n");
+
             String dateOfCheckIn = e.getDateOfCheckIn();
             Date dateIn = sdf.parse(dateOfCheckIn);
             String dateOfCheckOut = e.getDateOfCheckOut();
@@ -120,15 +119,8 @@ public class ShowBookings extends JFrame{
                 model.addRow(e.getAsRow());
 
             }
-
         }
-
-
-
     }
-
-
-
 
 
     private void sortTable(){
@@ -138,34 +130,13 @@ public class ShowBookings extends JFrame{
         sortList.add(new RowSorter.SortKey(0, SortOrder.ASCENDING));
         sorter.setSortKeys(sortList);
 
-
     }
 
-    private void showRecords() throws FileNotFoundException {
-        File bookingFile = new File("booking.txt");
-        Scanner myReader = new Scanner(bookingFile);
-        while (myReader.hasNextLine()) {
-            String bookingInfo = myReader.nextLine();
-            System.out.println(bookingInfo);
-            Object[] bookingInfoS =  bookingInfo.split(",");
-            Object[] finalInfo = {bookingInfoS[9], "not available",bookingInfoS[0], bookingInfoS[2], bookingInfoS[4], bookingInfoS[5],bookingInfoS[6], bookingInfoS[7]};
-            model.addRow(finalInfo);
-        }
-    }
 
     private void readData(){
         List<CustomerEntity> entities = repository.readFromFile();
-        entities.forEach(e->model.addRow(e.getAsRow()));
-        /*
-        System.out.println(entities.size());
-        entities.forEach(e->{
-            System.out.println(Arrays.toString(e.getAsRow()));
-            model.addRow(e.getAsRow());
-            e.print();
-        });
-
-         */
-
+        entities.forEach(e-> model.addRow(e.getAsRow()));
+        sortTable();
 
     }
 

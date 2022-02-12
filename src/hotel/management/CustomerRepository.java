@@ -6,26 +6,23 @@ import java.util.ArrayList;
 
 
 public class CustomerRepository {
-    final FileDataSource dataSource;
+    final CustomerFileDataSource dataSource;
 
-    public CustomerRepository(FileDataSource dataSource) {
+    public CustomerRepository(CustomerFileDataSource dataSource) {
         this.dataSource = dataSource;
     }
 
     void saveToFile(ArrayList<CustomerEntity> entities) throws CannotSaveToFileException {
         try {
-            dataSource.saveToFile(entities);
-        } catch (IOException e) {
+            dataSource.saveCustomerToFile(entities);
+        } catch (IOException | ClassNotFoundException e) {
             throw new CannotSaveToFileException();
         }
-
-
     }
 
-
-    ArrayList<CustomerEntity> readFromFile()  {
+     ArrayList<CustomerEntity> readFromFile()  {
         try {
-            return dataSource.readFromFile();
+            return dataSource.readCustomersFromFile();
         } catch (IOException | ClassNotFoundException e) {
             return new ArrayList<CustomerEntity>();
         }

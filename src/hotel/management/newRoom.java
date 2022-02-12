@@ -2,9 +2,9 @@ package hotel.management;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.FileWriter;
-import java.io.IOException;
+
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Objects;
 
 
@@ -16,22 +16,21 @@ public class newRoom extends JFrame {
     private JLabel roomTypeLabel;
     private JLabel pricelabel;
     private JLabel roomNoLabel;
-    private JLabel availabilityLabel;
     private JLabel newRoomLabel;
     private JPanel mainPanel;
     private JButton saveButton;
     private JButton cancelButton;
-    private JRadioButton yesRadioButton;
-    private JRadioButton noRadioButton;
     private JButton backToMenuButton;
-    private ButtonGroup availableG;
 
 
-    public newRoom(){
+
+    private final RoomRepository repository;
+
+
+    public newRoom(RoomRepository repository){
+        this.repository = repository;
         setupFrame();
-
         textFields();
-
         saveButton.addActionListener(e -> {
             try {
                 writeToFile();
@@ -39,6 +38,8 @@ public class newRoom extends JFrame {
                 ex.printStackTrace();
             }
         });
+
+        cancelButton.addActionListener(e->clear());
         backToMenuButton.addActionListener(e->{
             new Menu();
             setVisible(false);
@@ -53,70 +54,59 @@ public class newRoom extends JFrame {
         setContentPane(mainPanel);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setMinimumSize(new Dimension(550, 600));
-
-
+        setResizable(false);
         setVisible(true);
 
     }
 
     private void textFields(){
         roomNoTextField.setBorder(javax.swing.BorderFactory.createEmptyBorder());
-
         priceTextField.setBorder(javax.swing.BorderFactory.createEmptyBorder());
         roomTypeComboBox.setBorder(javax.swing.BorderFactory.createEmptyBorder());
 
-        availableG = new ButtonGroup();
-        availableG.add(yesRadioButton);
-        availableG.add(noRadioButton);
-        yesRadioButton.setActionCommand("available");
-        noRadioButton.setActionCommand("not available");
-
         backToMenuButton.setIcon(new ImageIcon("menu.png"));
+        saveButton.setIcon(new ImageIcon("save.png"));
+        cancelButton.setIcon(new ImageIcon("cancel.png"));
     }
 
     private void writeToFile() throws ParseException {
         Integer roomNo = null;
-        String availability = null;
         String roomType = null;
         Integer price = null;
 
         try{
-            roomNo = Validators.getRoomNo(roomNoTextField.getText());
-            try{
-                availability = availableG.getSelection().getActionCommand();
-            } catch (NullPointerException e) {
-            throw new InvalidAvailabilityException();
-        }
+            roomNo = Integer.valueOf(roomNoTextField.getText());
 
             roomType = Objects.requireNonNull(roomTypeComboBox.getSelectedItem()).toString();
             price = Validators.getPrice(priceTextField.getText());
+
         }catch (AppExceptions e){
-            System.out.println(e.toString());
+            e.toString();
         }
 
-/*
-        String roomNo = roomNoTextField.getText();
+        if (roomNo != null  && roomType != null && price != null){
+            saveData();
 
-        String availability = availableG.getSelection().getActionCommand();
-        String roomType = Objects.requireNonNull(roomTypeComboBox.getSelectedItem()).toString();
-        String price = priceTextField.getText();
-
- */
-        if (roomNo != null && availability != null && roomType != null && price != null){
-            String customerInfo = roomNo+","+ availability+","+ roomType+ "," + price+ "\n";
-            try {
-                FileWriter myWriter = new FileWriter("rooms.txt", true);
-                myWriter.write(customerInfo +  "\n");
-                myWriter.close();
-                System.out.println("Successfully wrote to the file.");
-            } catch (IOException e) {
-                System.out.println("An error occurred.");
-                e.printStackTrace();
-            }
         }
 
     }
 
+    void saveData(){
+        RoomEntity newRoom = new RoomEntity(roomNoTextField.getText(), roomTypeComboBox.getSelectedItem().toString(), priceTextField.getText());
+        ArrayList<RoomEntity> entities = repository.readFromFile();
+        entities.add(newRoom);
+        try {
+            repository.saveToFile(entities);
+        } catch (CannotSaveToFileException e) {
+            JOptionPane.showMessageDialog(this, e.toString());
+        }
+        JOptionPane.showMessageDialog(this, "Saved succesfully!");
+    }
 
+    private void clear(){
+        roomNoTextField.setText("");
+        priceTextField.setText("");
+
+    }
 
 }

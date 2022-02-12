@@ -5,7 +5,9 @@
     <constraints>
       <xy x="20" y="20" width="636" height="754"/>
     </constraints>
-    <properties/>
+    <properties>
+      <background color="-5661270"/>
+    </properties>
     <border type="none"/>
     <children>
       <component id="868b3" class="javax.swing.JLabel" binding="personalDetailsLabel">
@@ -15,6 +17,7 @@
           </grid>
         </constraints>
         <properties>
+          <background color="-6384993"/>
           <font size="32" style="1"/>
           <text value="Personal Details"/>
         </properties>
@@ -47,6 +50,7 @@
           <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
+          <background color="-5661270"/>
           <text value="Male"/>
         </properties>
       </component>
@@ -66,6 +70,7 @@
           <grid row="4" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
+          <background color="-5661270"/>
           <text value="Female"/>
         </properties>
       </component>
@@ -198,7 +203,7 @@
           </grid>
         </constraints>
         <properties>
-          <background color="-1050113"/>
+          <background color="-2302756"/>
           <borderPainted value="false"/>
           <focusable value="false"/>
           <font size="14"/>
@@ -254,11 +259,11 @@
         <constraints>
           <grid row="15" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false">
             <minimum-size width="-1" height="25"/>
-            <maximum-size width="120" height="25"/>
+            <maximum-size width="140" height="30"/>
           </grid>
         </constraints>
         <properties>
-          <background color="-1050113"/>
+          <background color="-2302756"/>
           <borderPainted value="false"/>
           <focusable value="false"/>
           <text value="Choose Room"/>
@@ -308,7 +313,7 @@
           </grid>
         </constraints>
         <properties>
-          <background color="-1"/>
+          <background color="-2302756"/>
           <borderPainted value="false"/>
           <focusable value="false"/>
           <font size="14"/>
@@ -323,6 +328,7 @@
           </grid>
         </constraints>
         <properties>
+          <background color="-2302756"/>
           <disabledTextColor color="-4209980"/>
           <editable value="false"/>
           <focusable value="false"/>
@@ -339,7 +345,7 @@
           </grid>
         </constraints>
         <properties>
-          <background color="-1"/>
+          <background color="-2302756"/>
           <borderPainted value="false"/>
           <focusable value="false"/>
           <font size="14"/>
